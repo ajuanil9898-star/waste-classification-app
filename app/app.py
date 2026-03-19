@@ -1,37 +1,14 @@
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import JSONResponse
-import tensorflow as tf
 import numpy as np
 from PIL import Image
+import tensorflow as tf
 import io
-
 
 app = FastAPI()
 
-# Load trained model
-from tensorflow.keras import layers, models
-from tensorflow.keras.applications import MobileNetV2
-
-# Recreate model architecture manually
-base_model = MobileNetV2(
-    input_shape=(224, 224, 3),
-    include_top=False,
-    weights="imagenet"
-)
-
-base_model.trainable = False
-
-model = models.Sequential([
-    layers.Rescaling(1./255, input_shape=(224, 224, 3)),
-    base_model,
-    layers.GlobalAveragePooling2D(),
-    layers.Dropout(0.3),
-    layers.Dense(128, activation='relu'),
-    layers.Dense(9, activation='softmax')
-])
-
-# Load trained weights only
-model.load_weights("models/realwaste_model.h5")
+# ✅ Load model using SavedModel (NO KERAS)
+model = tf.saved_model.load("models/final_model")
+infer = model.signatures["serving_default"]
 
 class_names = [
     "Cardboard",
@@ -44,23 +21,35 @@ class_names = [
     "Textile Trash",
     "Vegetation"
 ]
+
 @app.get("/")
 def home():
     return {"message": "Waste Classification API is running"}
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    contents = await file.read()
-    image = Image.open(io.BytesIO(contents)).convert("RGB")
-    image = image.resize((224, 224))
-    image = np.array(image)
-    image = np.expand_dims(image, axis=0)
+    try:
+        contents = await file.read()
 
-    prediction = model.predict(image)
-    confidence = float(np.max(prediction))
-    predicted_class = class_names[np.argmax(prediction)]
+        image = Image.open(io.BytesIO(contents)).convert("RGB")
+        image = image.resize((224, 224))
 
-    return {
-        "prediction": predicted_class,
-        "confidence": round(confidence * 100, 2)
-    }
+        image = np.array(image)
+        image = np.expand_dims(image, axis=0)
+
+        input_tensor = tf.convert_to_tensor(image, dtype=tf.float32)
+
+        output = infer(input_tensor)
+
+        prediction = list(output.values())[0].numpy()
+
+        confidence = float(np.max(prediction))
+        predicted_class = class_names[np.argmax(prediction)]
+
+        return {
+            "prediction": predicted_class,
+            "confidence": round(confidence * 100, 2)
+        }
+
+    except Exception as e:
+        return {"error": str(e)}

@@ -1,20 +1,16 @@
-# Use official TensorFlow image (matches Keras properly)
-FROM tensorflow/tensorflow:2.20.0
+FROM tensorflow/tensorflow:2.13.0
 
-# Set working directory
 WORKDIR /app
 
-# Copy requirements
 COPY requirements.txt .
 
-# Install additional dependencies (FastAPI etc.)
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --upgrade pip
+RUN pip install --no-cache-dir --break-system-packages -r requirements.txt
 
-# Copy project files
-COPY . .
+COPY app ./app
+COPY models ./models
+COPY mlartifacts /mlartifacts
 
-# Expose port
-EXPOSE 8000
+EXPOSE 10000
 
-# Run FastAPI
-CMD uvicorn app.app:app --host 0.0.0.0 --port 8000
+CMD ["uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "10000"]

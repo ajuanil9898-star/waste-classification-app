@@ -1,0 +1,8 @@
+{
+    "train_accuracy": 0.8511309623718262,
+    "val_accuracy": 0.8115789294242859,
+    "train_loss": 0.41504552960395813,
+    "val_loss": 0.5486190915107727,
+    "epochs": 5,
+    "batch_size": 32
+}

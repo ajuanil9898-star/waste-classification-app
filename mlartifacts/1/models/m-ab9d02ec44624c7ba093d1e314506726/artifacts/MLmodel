@@ -1,0 +1,20 @@
+artifact_path: file:C:/waste-classification/mlartifacts/1/models/m-ab9d02ec44624c7ba093d1e314506726/artifacts
+flavors:
+  keras:
+    data: data
+    keras_backend: tensorflow
+    keras_version: 3.13.2
+    save_exported_model: false
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.keras
+    python_version: 3.12.10
+mlflow_version: 3.10.0
+model_id: m-ab9d02ec44624c7ba093d1e314506726
+model_size_bytes: 10277317
+model_uuid: m-ab9d02ec44624c7ba093d1e314506726
+prompts: null
+run_id: 888a08f38b7e479f8540456f385f382a
+utc_time_created: '2026-03-15 12:01:08.133374'
