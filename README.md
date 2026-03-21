@@ -119,6 +119,7 @@ waste-classification-app/
 ## 👨‍💻 Author
 
 **ARJUN.A.V**
+
 M.Tech in Artificial Intelligence
 
 ---
