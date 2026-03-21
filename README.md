@@ -10,8 +10,8 @@ This project demonstrates a complete **MLOps pipeline**, including model develop
 
 ## 🚀 Live Demo
 
-* 🌐 **Frontend (Streamlit):** https://your-streamlit-url
-* ⚙️ **Backend API (FastAPI Docs):** https://your-render-url/docs
+* 🌐 **Frontend (Streamlit):** https://waste-classification-app-qkscffafxjkhttabdwdqwe.streamlit.app/
+* ⚙️ **Backend API (FastAPI Docs):** https://waste-classification-app-dak0.onrender.com/docs
 
 ---
 
